@@ -183,6 +183,16 @@
 				//删除
 				$(".delete").click(function(){
 					$(this).parent().remove();
+					var s = 0 ;//总价
+					var s1 = 0;//
+					//计算总价
+					for(var i=2;i<$(".list li").length-1;i++){
+						if($(".list li").eq(i).find("input").prop("checked")){
+							s+=parseFloat($(".list li").eq(i).find(".jin").html());
+							s1+=1;
+						}						
+					}
+					$(".zongjia").html(s.toFixed(2));
 				})
 			})
 		</script>
