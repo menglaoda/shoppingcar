@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+				-moz-user-select: none;
+				-o-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			.list{
+				list-style: none;
+				width: 1000px;
+				margin: 100px auto;
+			}
+			.list li{
+				height: 110px;
+			
+			}
+			.list li:first-child{
+				height: 40px;
+				line-height: 40px;
+				border-bottom: solid 1px black;
+			}
+			.list h3{
+				width: 150px;
+				border-bottom: solid 1px red;
+				text-align: center;
+			}
+			.list li:nth-child(2){
+				height: 50px;
+				line-height: 50px;
+			}
+			.list div{
+				float: left;
+				width: 120px;
+				text-align: center;
+			}
+			.list div:first-child{
+				width: 50px;
+			}
+			.list div:nth-child(3){
+				width: 350px;
+			}
+			.list img{
+				width: 120px;
+				position: relative;
+				top: -30px;
+			}
+			.list li:nth-child(2) div:first-child{
+				text-align: left;
+			}
+			.list li:nth-child(n+3) div:first-child{
+				text-align: left;
+			}
+			.list li:nth-child(n+3){
+				background: #ccc;
+				margin-bottom: 15px;
+			}
+			.list li:nth-child(n+3)>div{
+				position: relative;
+				top: 45px;
+			}
+			.jian,.num,.jia{
+				width: 20px !important;
+				height: 20px;
+				line-height: 20px;
+				border: solid 1px #666;
+				text-align: center !important;
+				cursor:pointer;
+			}
+			.list .num{
+				border: none;
+				margin: 0px 5px;
+			}
+			.list .jian{
+				margin-left: 23px;
+			}
+			.list .lastli{
+				height: auto;
+				background: white !important;
+				text-align: right;
+			}
+			.zongjia{
+				color: red;
+				font-size: 30px;
+				margin: 0px 5px;
+			}
+			.delete{
+				color: blue;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+		</style>
+		<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				//加号
+				$(".jia").click(function(){
+					//改变数量
+					$(this).siblings(".num").html(parseFloat($(this).siblings(".num").html())+1);
+					//获取当前金额
+					var jine = $(this).parent().siblings(".dan").html()*$(this).siblings(".num").html();
+					//改变金额
+					$(this).parent().siblings(".jin").html(jine.toFixed(2));
+					//计算总价
+					var s = 0 ;
+					for(var i=2;i<$(".list li").length-1;i++){
+						if($(".list li").eq(i).find("input").prop("checked")){
+							s+=parseFloat($(".list li").eq(i).find(".jin").html());
+						}
+					}
+					$(".zongjia").html(s.toFixed(2));
+				})
+				//减号
+				$(".jian").click(function(){
+					//判断数量是否大于1
+					if($(this).siblings(".num").html()>1){
+						//获取当前数量
+						$(this).siblings(".num").html(parseFloat($(this).siblings(".num").html())-1);
+						//获取金额
+						var jine = $(this).parent().siblings(".dan").html()*$(this).siblings(".num").html();
+						//改变金额
+						$(this).parent().siblings(".jin").html(jine.toFixed(2));
+						//计算总价
+						var s = 0 ;
+						for(var i=2;i<$(".list li").length-1;i++){
+							if($(".list li").eq(i).find("input").prop("checked")){
+								s+=parseFloat($(".list li").eq(i).find(".jin").html());
+							}
+						}
+						$(".zongjia").html(s.toFixed(2));
+					}
+				})
+				//全选
+				$(".quanxuan").click(function(){
+					//判断全选是否打钩
+					if($(this).prop("checked")){
+						//全部商品打钩
+						for(var i=2;i<$(".list li").length-1;i++){
+							$(".list li").eq(i).find("input").prop("checked",true);
+						}
+						//计算总价
+						var s = 0 ;
+						for(var i=2;i<$(".list li").length-1;i++){
+							if($(".list li").eq(i).find("input").prop("checked")){
+								s+=parseFloat($(".list li").eq(i).find(".jin").html());
+							}
+						}
+						$(".zongjia").html(s.toFixed(2));
+					}else{
+						//所有商品取消打钩
+						for(var i=2;i<$(".list li").length-1;i++){
+							$(".list li").eq(i).find("input").prop("checked",false);
+						}
+						//总价为0
+						$(".zongjia").html('0.00');
+					}	
+				})
+				//
+				$(".check input").click(function(){
+					//总价取消打钩
+					$(".quanxuan").prop("checked",false);
+					var s = 0 ;//总价
+					var s1 = 0;//
+					//计算总价
+					for(var i=2;i<$(".list li").length-1;i++){
+						if($(".list li").eq(i).find("input").prop("checked")){
+							s+=parseFloat($(".list li").eq(i).find(".jin").html());
+							s1+=1;
+						}						
+					}
+					$(".zongjia").html(s.toFixed(2));
+					//判断是否商品全选中
+					if(s1==$(".list li").length-3){
+						$(".quanxuan").prop("checked",true);
+					}
+				})
+				//删除
+				$(".delete").click(function(){
+					$(this).parent().remove();
+				})
+			})
+		</script>
+	</head>
+	<body>
+		<ul class="list">
+			<li>
+				<h3>全部商品</h3>
+			</li>
+			<li>
+				<div><input class="quanxuan" type="checkbox" />全选</div>
+				<div>商品</div>
+				<div>商品信息</div>
+				<div>单价</div>
+				<div>数量</div>
+				<div>金额</div>
+				<div>操作</div>
+			</li>
+			<li>
+				<div class="check"><input type="checkbox" /></div>
+				<div>
+					<img src="img/ia_100000009.jpg" />
+				</div>
+				<div>北欧风格时尚实木椅</div>
+				<div class="dan">100.12</div>
+				<div>
+					<div class="jian">-</div>
+					<div class="num">1</div>
+					<div class="jia">+</div>
+				</div>
+				<div class="jin">100.12</div>
+				<div class="delete">删除</div>
+			</li>
+			<li>
+				<div class="check"><input type="checkbox" /></div>
+				<div>
+					<img src="img/ia_100000011.jpg" />
+				</div>
+				<div>家用饭桌 现代简约</div>
+				<div class="dan">120.12</div>
+				<div>
+					<div class="jian">-</div>
+					<div class="num">1</div>
+					<div class="jia">+</div>
+				</div>
+				<div class="jin">120.12</div>
+				<div class="delete">删除</div>
+			</li>
+			<li>
+				<div class="check"><input type="checkbox" /></div>
+				<div>
+					<img src="img/ia_100000010.jpg" />
+				</div>
+				<div>实木书桌 现代简约 北欧风格</div>
+				<div class="dan">99.62</div>
+				<div>
+					<div class="jian">-</div>
+					<div class="num">1</div>
+					<div class="jia">+</div>
+				</div>
+				<div class="jin">99.62</div>
+				<div class="delete">删除</div>
+			</li>
+			<li class="lastli">总价：<span class="zongjia">0.00</span>元</li>
+		</ul>
+	</body>
+</html>
